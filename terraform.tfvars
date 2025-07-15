@@ -1,4 +1,4 @@
-resource_group_name = "web-rg01"
+resource_group_name     = "web-rg01"
 resource_group_location = "West Europe"
 
 webapp_environment = {
@@ -13,5 +13,16 @@ webapp_environment = {
     service_plan_sku      = "S1"
     service_plan_location = "North Europe"
     web_app_name          = "webapp20030wl"
+  }
+}
+
+traffic_manager_endpoints = {
+  "primaryendpoint" = {
+    priority = 1,
+    weight   = 100
+  },
+  "secondaryendpoint" = {
+    priority = 2,
+    weight   = 100
   }
 }

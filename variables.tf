@@ -16,3 +16,12 @@ variable "webapp_environment" {
     }
   ))
 }
+
+variable "traffic_manager_endpoints" {
+  type = map(object(
+    {
+      priority = number
+      weight   = number
+    }
+  ))
+}
