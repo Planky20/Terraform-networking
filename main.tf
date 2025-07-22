@@ -1,27 +1,20 @@
 module "resource-group" {
   source              = "./modules/general/resourcegroup"
   resource_group_name = var.resource_group_name
-  location            = var.resource_group_location
+  location            = var.location
 }
 
-module "webapp-deployment" {
-  source              = "./modules/web"
-  resource_group_name = module.resource-group.resource_group_name
-  webapp_environment  = var.webapp_environment
-}
-
-module "traffic-manager" {
-  source                    = "./modules/networking/trafficmanager"
-  resource_group_name       = module.resource-group.resource_group_name
-  traffic_manager_endpoints = var.traffic_manager_endpoints
-  webapp_id                 = module.webapp-deployment.webapp_id
-  webapp_hostname           = module.webapp-deployment.webapp_hostname
-}
-
-output "webapp_id" {
-  value = module.webapp-deployment.webapp_id
-}
-
-output "webapp_hostname" {
-  value = module.webapp-deployment.webapp_hostname
+module "network" {
+  source                       = "./modules/networking/vnet"
+  for_each                     = var.environment
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
+  vnet_name                    = each.value.virtual_network_name
+  vnet_address_prefix          = each.value.virtual_network_address_space
+  vnet_subnet_count            = each.value.subnet_count
+  public_ip_address_count      = each.value.public_ip_address_count
+  network_interfaces_count     = each.value.network_interface_count
+  network_security_group_rules = var.network_security_group_rules
+  resource_prefix              = each.key
+  depends_on                   = [module.resource-group]
 }

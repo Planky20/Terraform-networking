@@ -1,27 +1,31 @@
 variable "resource_group_name" {
-  type = string
+  type        = string
+  description = "This defines the name of the resource group"
 }
 
-variable "resource_group_location" {
-  type = string
+variable "location" {
+  type        = string
+  description = "This defines the location of the resource group and the resources"
 }
 
-variable "webapp_environment" {
-  type = map(object(
+variable "network_security_group_rules" {
+  type = list(object(
     {
-      service_plan_os_type  = string
-      service_plan_sku      = string
-      service_plan_location = string
-      web_app_name          = string
+      priority               = number
+      destination_port_range = string
     }
   ))
+  description = "This defines the network security group rules"
 }
 
-variable "traffic_manager_endpoints" {
+variable "environment" {
   type = map(object(
     {
-      priority = number
-      weight   = number
-    }
-  ))
+      virtual_network_name          = string
+      virtual_network_address_space = string
+      subnet_count                  = number
+      network_interface_count       = number
+      public_ip_address_count       = number
+      virtual_machine_count         = number
+  }))
 }
