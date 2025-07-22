@@ -29,3 +29,12 @@ variable "environment" {
       virtual_machine_count         = number
   }))
 }
+
+variable "peering_virtual_networks" {
+  type = map(object(
+    {
+      virtual_network_key   = string
+      destination_vnet_name = string
+    }
+  ))
+}

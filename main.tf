@@ -29,3 +29,13 @@ module "virtual-machines" {
   virtual_machine_public_ip_addresses = module.network[each.key].public_ip_addresses            # From the output of the network module
   resource_prefix                     = each.key
 }
+
+module "vnet-peering" {
+  source                 = "./modules/networking/vnetpeering"
+  for_each               = var.peering_virtual_networks # One peering for each VNET
+  source_network_name    = each.key
+  resource_group_name    = var.resource_group_name
+  destination_vnet_name  = each.value.destination_vnet_name
+  destination_network_id = module.network[each.value.virtual_network_key].virtual_network_id # From the output of the network module
+  depends_on             = [module.network]
+}
