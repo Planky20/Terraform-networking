@@ -8,23 +8,29 @@ variable "location" {
   description = "This defines the location of the resources"
 }
 
-variable "virtual_machine_count" {
-  type        = number
-  description = "This provides the number of virtual machines"
-
+variable "virtual_machine_details" {
+  type = list(object(
+    {
+      network_interface_name = string
+      virtual_machine_name   = string
+      script_name            = string
+    }
+  ))
 }
 
-variable "virtual_network_interface_ids" {
-  type        = list(string)
-  description = "This will hold the virtual network interfaces ids"
+variable "network_interface_details" {
+  type = list(object(
+    {
+      network_interface_name = string
+      subnet_name            = string
+    }
+  ))
 }
 
-
-variable "virtual_machine_public_ip_addresses" {
-  type        = list(string)
-  description = "This will hold the virtual machine public ip addresses"
+variable "storage_account_name" {
+  type = string
 }
 
-variable "resource_prefix" {
+variable "container_name" {
   type = string
 }

@@ -21,20 +21,36 @@ variable "network_security_group_rules" {
 variable "environment" {
   type = map(object(
     {
-      virtual_network_name          = string
       virtual_network_address_space = string
-      subnet_count                  = number
-      network_interface_count       = number
-      public_ip_address_count       = number
-      virtual_machine_count         = number
-  }))
+      subnets = map(object(
+        {
+          subnet_address_prefix = string
+          network_interfaces = list(object(
+            {
+              name                 = string
+              virtual_machine_name = string
+              script_name          = string
+            }
+          ))
+        }
+      ))
+    }
+  ))
 }
 
-variable "peering_virtual_networks" {
+variable "storage_account_details" {
+  type = map(string)
+}
+
+variable "container_names" {
+  type = list(string)
+}
+
+variable "blobs" {
   type = map(object(
     {
-      virtual_network_key   = string
-      destination_vnet_name = string
+      container_name = string
+      blob_location  = string
     }
   ))
 }

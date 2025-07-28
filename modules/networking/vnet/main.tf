@@ -1,42 +1,36 @@
 resource "azurerm_virtual_network" "virtual_network" {
-  name                = var.vnet_name
+  for_each = { for network in var.virtual_network_details : network.virtual_network_name => network } # It will construct a map, in which the vnet name is the KEY and the entire NETWORK object is the VALUE
+  name                = each.key
   location            = var.location
   resource_group_name = var.resource_group_name
-  address_space       = [var.vnet_address_prefix]
+  address_space       = [each.value.virtual_network_address_space]
 }
 
 resource "azurerm_subnet" "network_subnets" {
-  count                = var.vnet_subnet_count
-  name                 = "${var.resource_prefix}subnet${count.index}"
+  for_each             = { for subnet in var.subnet_details : subnet.subnet_name => subnet } # Again building a map, the subnet name is the KEY and the entire SUBNET object is the VALUE
+  name                 = "${each.key}subnet"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.virtual_network.name
-  address_prefixes     = [cidrsubnet(var.vnet_address_prefix, 8, count.index)]
-}
-
-resource "azurerm_public_ip" "public_ipaddress" {
-  count               = var.public_ip_address_count
-  name                = "${var.resource_prefix}public-ip0${count.index + 1}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  allocation_method   = "Static"
+  virtual_network_name = each.value.virtual_network_name
+  address_prefixes     = [each.value.subnet_address_prefix]
+  depends_on = [ azurerm_virtual_network.virtual_network ]
 }
 
 resource "azurerm_network_interface" "network_interfaces" {
-  count               = var.network_interfaces_count
-  name                = "${var.resource_prefix}interface-0${count.index + 1}"
+  for_each            = { for networkinterface in var.network_interface_details : networkinterface.network_interface_name => networkinterface } # Map again, the name of a NIC is the KEY and the entire NIC object is the VALUE
+  name                = each.key
   location            = var.location
   resource_group_name = var.resource_group_name
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.network_subnets[count.index].id
+    subnet_id                     = azurerm_subnet.network_subnets[each.value.subnet_name].id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.public_ipaddress[count.index].id
   }
 }
 
 resource "azurerm_network_security_group" "network_security_group" {
-  name                = "${var.resource_prefix}network-nsg"
+  for_each            = { for subnet in var.subnet_details : subnet.subnet_name => subnet } # Create a map, the subnet name is the KEY and the entire SUBNET object is the VALUE. Will create 1 nsg for every subnet.
+  name                = "${each.key}_nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -58,7 +52,7 @@ resource "azurerm_network_security_group" "network_security_group" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg" {
-  count                     = var.vnet_subnet_count
-  subnet_id                 = azurerm_subnet.network_subnets[count.index].id
-  network_security_group_id = azurerm_network_security_group.network_security_group.id
+  for_each                  = { for subnet in var.subnet_details : subnet.subnet_name => subnet } # 1 subnet for each NSG association
+  subnet_id                 = azurerm_subnet.network_subnets[each.key].id
+  network_security_group_id = azurerm_network_security_group.network_security_group[each.key].id
 }
