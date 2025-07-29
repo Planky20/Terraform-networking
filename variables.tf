@@ -54,3 +54,15 @@ variable "blobs" {
     }
   ))
 }
+
+variable "application_gateway_details" {
+  type = list(string)
+}
+
+variable "application_pool_details" {
+  type = map(object(
+    {
+      network_interface_name = string
+    }
+  ))
+}

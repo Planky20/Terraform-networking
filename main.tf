@@ -35,3 +35,12 @@ module "storage-account" {
   blobs                   = var.blobs
   depends_on              = [module.resource-group]
 }
+
+module "application-gateway" {
+  source                      = "./modules/networking/applicationgateway"
+  resource_group_name         = var.resource_group_name
+  location                    = var.location
+  application_gateway_details = var.application_gateway_details
+  application_pool_details    = var.application_pool_details
+  network_interface_details   = local.network_interface_details
+}

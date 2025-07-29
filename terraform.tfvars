@@ -59,3 +59,14 @@ blobs = {
     blob_location  = "./modules/compute/virtualMachines/install_web_videos.sh"
   }
 }
+
+application_gateway_details = ["app-network", "app-gatewaysubnet", "10.0.10.0/24"]
+
+application_pool_details = {
+  images = {
+    network_interface_name = "images-interface-01"
+  }
+  videos = {
+    network_interface_name = "videos-interface-01"
+  }
+}

@@ -1,5 +1,5 @@
 resource "azurerm_virtual_network" "virtual_network" {
-  for_each = { for network in var.virtual_network_details : network.virtual_network_name => network } # It will construct a map, in which the vnet name is the KEY and the entire NETWORK object is the VALUE
+  for_each            = { for network in var.virtual_network_details : network.virtual_network_name => network } # It will construct a map, in which the vnet name is the KEY and the entire NETWORK object is the VALUE
   name                = each.key
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -12,7 +12,7 @@ resource "azurerm_subnet" "network_subnets" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = each.value.virtual_network_name
   address_prefixes     = [each.value.subnet_address_prefix]
-  depends_on = [ azurerm_virtual_network.virtual_network ]
+  depends_on           = [azurerm_virtual_network.virtual_network]
 }
 
 resource "azurerm_network_interface" "network_interfaces" {
