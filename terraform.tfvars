@@ -16,23 +16,23 @@ environment = {
   app-network = {
     virtual_network_address_space = "10.0.0.0/16"
     subnets = {
-      images = {
+      web = {
         subnet_address_prefix = "10.0.0.0/24"
         network_interfaces = [
           {
-            name                 = "images-interface-01"
-            virtual_machine_name = "imagesvm01"
-            script_name          = "install_web_images.sh"
+            name                 = "web-interface-01"
+            virtual_machine_name = "webvm01"
+            script_name          = "install_web.sh"
           }
         ]
       }
-      videos = {
+      app = {
         subnet_address_prefix = "10.0.1.0/24"
         network_interfaces = [
           {
-            name                 = "videos-interface-01"
-            virtual_machine_name = "videosvm01"
-            script_name          = "install_web_videos.sh"
+            name                 = "app-interface-01"
+            virtual_machine_name = "appvm01"
+            script_name          = "install_web.sh"
           }
         ]
       }
@@ -50,23 +50,9 @@ storage_account_details = {
 container_names = ["scripts", "data"]
 
 blobs = {
-  "install_web_images.sh" = {
+  "install_web.sh" = {
     container_name = "scripts"
-    blob_location  = "./modules/compute/virtualMachines/install_web_images.sh"
-  }
-  "install_web_videos.sh" = {
-    container_name = "scripts"
-    blob_location  = "./modules/compute/virtualMachines/install_web_videos.sh"
+    blob_location  = "./modules/compute/virtualMachines/install_web.sh"
   }
 }
 
-application_gateway_details = ["app-network", "app-gatewaysubnet", "10.0.10.0/24"]
-
-application_pool_details = {
-  images = {
-    network_interface_name = "images-interface-01"
-  }
-  videos = {
-    network_interface_name = "videos-interface-01"
-  }
-}
