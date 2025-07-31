@@ -35,3 +35,12 @@ module "storage-account" {
   blobs                   = var.blobs
   depends_on              = [module.resource-group]
 }
+
+module "firewall" {
+  source               = "./modules/networking/firewall"
+  resource_group_name  = var.resource_group_name
+  location             = var.location
+  virtual_network_name = "app-network"
+  subnet_ids           = module.network.subnet_ids # Output for the web and app subnets from the network module
+  depends_on           = [module.network]
+}
