@@ -37,10 +37,16 @@ module "storage-account" {
 }
 
 module "firewall" {
-  source               = "./modules/networking/firewall"
-  resource_group_name  = var.resource_group_name
-  location             = var.location
-  virtual_network_name = "app-network"
-  subnet_ids           = module.network.subnet_ids # Output for the web and app subnets from the network module
-  depends_on           = [module.network]
+  source                        = "./modules/networking/firewall"
+  resource_group_name           = var.resource_group_name
+  location                      = var.location
+  virtual_network_name          = "app-network"
+  subnet_ids                    = module.network.subnet_ids         # Output for the web and app subnets from the network module
+  network_interface_ipaddresses = module.network.private_ip_address # Output for the NICs private IPs from the network module
+  firewall_NAT_rules            = var.firewall_NAT_rules
+  depends_on                    = [module.network]
+}
+
+output "private_ip_address" {
+  value = module.network.private_ip_address
 }

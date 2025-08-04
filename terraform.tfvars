@@ -56,3 +56,11 @@ blobs = {
   }
 }
 
+firewall_NAT_rules = {
+  web-interface-01 = {
+    destination_port_number = 4001
+  }
+  app-interface-01 = {
+    destination_port_number = 4002
+  }
+}

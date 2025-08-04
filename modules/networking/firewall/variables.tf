@@ -15,3 +15,19 @@ variable "virtual_network_name" {
 variable "subnet_ids" {
   type = list(string)
 }
+
+variable "firewall_NAT_rules" {
+  type = map(object(
+    {
+      destination_port_number = number
+    }
+  ))
+}
+
+variable "network_interface_ipaddresses" {
+  type = map(object(
+    {
+      private_ip_address = string
+    }
+  ))
+}

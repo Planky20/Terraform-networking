@@ -54,3 +54,11 @@ variable "blobs" {
     }
   ))
 }
+
+variable "firewall_NAT_rules" {
+  type = map(object(
+    {
+      destination_port_number = number
+    }
+  ))
+}

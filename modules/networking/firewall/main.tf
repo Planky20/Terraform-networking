@@ -53,7 +53,32 @@ resource "azurerm_route" "firewallroute" {
 }
 
 resource "azurerm_subnet_route_table_association" "subnetassociation" {
-  for_each  = toset(var.subnet_ids)
-  subnet_id = each.key
+  for_each       = toset(var.subnet_ids)
+  subnet_id      = each.key
   route_table_id = azurerm_route_table.firewallroutetable.id
+}
+
+resource "azurerm_firewall_policy_rule_collection_group" "rulecollection" {
+  name               = "rulecollection"
+  firewall_policy_id = azurerm_firewall_policy.firewallpolicy.id
+  priority           = 500
+
+  nat_rule_collection {
+    name     = "nat_rule_collection"
+    priority = 300
+    action   = "Dnat"
+
+    dynamic "rule" {
+      for_each = var.firewall_NAT_rules
+      content {
+        name                = "Allow${rule.key}"
+        protocols           = ["TCP"]
+        source_addresses    = ["0.0.0.0/0"]
+        destination_address = "${azurerm_public_ip.firewallip.ip_address}" # Public IP of the Firewall
+        destination_ports   = [rule.value.destination_port_number]
+        translated_address  = var.network_interface_ipaddresses[rule.key].private_ip_address # Private IP address of each NIC fetched from output variable of the vnet module
+        translated_port     = "22"
+      }
+    }
+  }
 }
