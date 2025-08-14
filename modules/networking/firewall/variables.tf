@@ -13,7 +13,11 @@ variable "virtual_network_name" {
 }
 
 variable "subnet_ids" {
-  type = list(string)
+  type = map(object(
+    {
+      subnet_id = string
+    }
+  ))
 }
 
 variable "firewall_NAT_rules" {

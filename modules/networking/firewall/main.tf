@@ -53,8 +53,8 @@ resource "azurerm_route" "firewallroute" {
 }
 
 resource "azurerm_subnet_route_table_association" "subnetassociation" {
-  for_each       = toset(var.subnet_ids)
-  subnet_id      = each.key
+  for_each       = var.subnet_ids
+  subnet_id      = each.value.subnet_id
   route_table_id = azurerm_route_table.firewallroutetable.id
 }
 
