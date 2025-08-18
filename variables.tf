@@ -62,3 +62,11 @@ variable "firewall_NAT_rules" {
     }
   ))
 }
+
+variable "firewall_application_rules" {
+  type = map(object(
+    {
+      allow_url = string
+    }
+  ))
+}

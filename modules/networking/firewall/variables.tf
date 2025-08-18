@@ -35,3 +35,11 @@ variable "network_interface_ipaddresses" {
     }
   ))
 }
+
+variable "firewall_application_rules" {
+  type = map(object(
+    {
+      allow_url = string
+    }
+  ))
+}

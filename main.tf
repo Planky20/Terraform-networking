@@ -44,6 +44,7 @@ module "firewall" {
   subnet_ids                    = module.network.subnet_ids         # Output for the web and app subnets from the network module
   network_interface_ipaddresses = module.network.private_ip_address # Output for the NICs private IPs from the network module
   firewall_NAT_rules            = var.firewall_NAT_rules
+  firewall_application_rules    = var.firewall_application_rules
   depends_on                    = [module.network]
 }
 

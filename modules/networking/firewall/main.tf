@@ -74,11 +74,35 @@ resource "azurerm_firewall_policy_rule_collection_group" "rulecollection" {
         name                = "Allow${rule.key}"
         protocols           = ["TCP"]
         source_addresses    = ["0.0.0.0/0"]
-        destination_address = "${azurerm_public_ip.firewallip.ip_address}" # Public IP of the Firewall
+        destination_address = azurerm_public_ip.firewallip.ip_address # Public IP of the Firewall
         destination_ports   = [rule.value.destination_port_number]
         translated_address  = var.network_interface_ipaddresses[rule.key].private_ip_address # Private IP address of each NIC fetched from output variable of the vnet module
         translated_port     = "22"
       }
     }
   }
+
+  application_rule_collection {
+    name     = "app_rule_collection"
+    priority = 600
+    action   = "Allow"
+
+    dynamic "rule" {
+      for_each = var.firewall_application_rules
+      content {
+        name = "AllowMicrosoft-${rule.key}"
+        protocols {
+          type = "Http"
+          port = 80
+        }
+        protocols {
+          type = "Https"
+          port = 443
+        }
+        source_addresses  = [var.network_interface_ipaddresses[rule.key].private_ip_address] # Private IP address of each NIC fetched from output variable of the vnet module
+        destination_fqdns = [rule.value.allow_url]
+      }
+    }
+  }
+
 }

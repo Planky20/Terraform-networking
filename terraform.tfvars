@@ -64,3 +64,12 @@ firewall_NAT_rules = {
     destination_port_number = 4002
   }
 }
+
+firewall_application_rules = {
+  web-interface-01 = {
+    allow_url = "www.microsoft.com"
+  },
+  app-interface-01 = {
+    allow_url = "www.microsoft.com"
+  }
+}
