@@ -70,3 +70,16 @@ variable "firewall_application_rules" {
     }
   ))
 }
+
+variable "metric_alerts" {
+  type = map(object( # Here the KEY will be the name of the alert
+    {
+      scope            = string
+      metric_namespace = string
+      metric_name      = string
+      aggregation      = string
+      operator         = string
+      threshold        = string
+    }
+  ))
+}

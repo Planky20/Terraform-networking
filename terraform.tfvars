@@ -22,7 +22,7 @@ environment = {
           {
             name                 = "web-interface-01"
             virtual_machine_name = "webvm01"
-            script_name          = "install_web.sh"
+            script_name          = "IIS.ps1"
           }
         ]
       }
@@ -32,7 +32,7 @@ environment = {
           {
             name                 = "app-interface-01"
             virtual_machine_name = "appvm01"
-            script_name          = "install_web.sh"
+            script_name          = "IIS.ps1"
           }
         ]
       }
@@ -50,9 +50,9 @@ storage_account_details = {
 container_names = ["scripts", "data"]
 
 blobs = {
-  "install_web.sh" = {
+  "IIS.ps1" = {
     container_name = "scripts"
-    blob_location  = "./modules/compute/virtualMachines/install_web.sh"
+    blob_location  = "./modules/compute/VirtualMachines/IIS.ps1"
   }
 }
 
@@ -71,5 +71,24 @@ firewall_application_rules = {
   },
   app-interface-01 = {
     allow_url = "www.microsoft.com"
+  }
+}
+
+metric_alerts = {
+  "Network-threshold-alert" = {
+    scope            = "webvm01"
+    metric_namespace = "Microsoft.Compute/virtualMachines"
+    metric_name      = "Network Out Total"
+    aggregation      = "Total"
+    operator         = "GreaterThan"
+    threshold        = 70000
+  },
+  "CPU-threshold-alert" = {
+    scope            = "appvm01"
+    metric_namespace = "Microsoft.Compute/virtualMachines"
+    metric_name      = "Percentage CPU"
+    aggregation      = "Total"
+    operator         = "GreaterThan"
+    threshold        = 70
   }
 }

@@ -36,18 +36,9 @@ module "storage-account" {
   depends_on              = [module.resource-group]
 }
 
-module "firewall" {
-  source                        = "./modules/networking/firewall"
-  resource_group_name           = var.resource_group_name
-  location                      = var.location
-  virtual_network_name          = "app-network"
-  subnet_ids                    = module.network.subnet_ids         # Output for the web and app subnets from the network module
-  network_interface_ipaddresses = module.network.private_ip_address # Output for the NICs private IPs from the network module
-  firewall_NAT_rules            = var.firewall_NAT_rules
-  firewall_application_rules    = var.firewall_application_rules
-  depends_on                    = [module.network]
-}
-
-output "private_ip_address" {
-  value = module.network.private_ip_address
+module "alerts" {
+  source                  = "./modules/monitoring/alerts"
+  resource_group_name     = var.resource_group_name
+  metric_alerts           = var.metric_alerts
+  virtual_machine_details = module.virtual-machines.virtual_machine_details # Name of an output variable from the virtualMachines module
 }
