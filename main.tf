@@ -42,3 +42,10 @@ module "alerts" {
   metric_alerts           = var.metric_alerts
   virtual_machine_details = module.virtual-machines.virtual_machine_details # Name of an output variable from the virtualMachines module
 }
+
+module "logging" {
+  source                  = "./modules/monitoring/logging"
+  resource_group_name     = var.resource_group_name
+  location                = var.location
+  virtual_machine_details = module.virtual-machines.virtual_machine_details # Name of an output variable from the virtualMachines module
+}
