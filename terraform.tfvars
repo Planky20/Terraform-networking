@@ -109,3 +109,12 @@ user_list = {
     role           = "Reader"
   }
 }
+
+resource_list = {
+  webvm01 = {
+    resource_type = "Microsoft.Compute/virtualMachines"
+  }
+  app-network = {
+    resource_type = "Microsoft.Network/virtualNetworks"
+  }
+}

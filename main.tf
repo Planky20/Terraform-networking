@@ -55,3 +55,9 @@ module "identity" {
   resource_group_name = var.resource_group_name
   user_list           = var.user_list
 }
+
+module "locking" {
+  source              = "./modules/general/locking"
+  resource_group_name = var.resource_group_name
+  resource_list       = var.resource_list
+}

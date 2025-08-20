@@ -95,3 +95,11 @@ variable "user_list" {
     }
   ))
 }
+
+variable "resource_list" {
+  type = map(object(
+    {
+      resource_type = string
+    }
+  ))
+}
