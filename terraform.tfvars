@@ -92,3 +92,20 @@ metric_alerts = {
     threshold        = 70
   }
 }
+
+user_list = {
+  WLtestUser1 = {
+    directory_name = "example.com" # Azure domain name
+    password       = "StrongPass17!"
+    resource_type  = "Microsoft.Compute/virtualMachines"
+    resource_name  = "webvm01"
+    role           = "Virtual Machine Contributor"
+  },
+  WLtestUser2 = {
+    directory_name = "example.com" # Azure domain name
+    password       = "StrongPass17!"
+    resource_type  = "Microsoft.Network/virtualNetworks"
+    resource_name  = "app-network"
+    role           = "Reader"
+  }
+}

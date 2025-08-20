@@ -83,3 +83,15 @@ variable "metric_alerts" {
     }
   ))
 }
+
+variable "user_list" {
+  type = map(object(
+    {
+      directory_name = string
+      password       = string
+      resource_type  = string
+      resource_name  = string
+      role           = string
+    }
+  ))
+}

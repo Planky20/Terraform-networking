@@ -49,3 +49,9 @@ module "logging" {
   location                = var.location
   virtual_machine_details = module.virtual-machines.virtual_machine_details # Name of an output variable from the virtualMachines module
 }
+
+module "identity" {
+  source              = "./modules/identity"
+  resource_group_name = var.resource_group_name
+  user_list           = var.user_list
+}
